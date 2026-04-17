@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 import { toon2json } from "./toon2json.js";
 function detectType(file, hint) {
     if (hint !== "auto")
@@ -9,7 +10,6 @@ function detectType(file, hint) {
     return "toon";
 }
 function loadFile(file) {
-    const { readFileSync } = require("fs");
     return readFileSync(file, "utf8");
 }
 function normalize(val, type) {

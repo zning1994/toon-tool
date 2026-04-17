@@ -8,9 +8,9 @@ import { diff } from "./diff.js";
 
 function readInput(file?: string): string {
   if (file) return fs.readFileSync(file, "utf8");
-  // Read from stdin (non-interactive if piped, block briefly if TTY)
+  // Read from stdin via fd 0 — works on Windows, macOS, Linux
   if (!process.stdin.isTTY) {
-    return fs.readFileSync("/dev/stdin", "utf8");
+    return fs.readFileSync(0, "utf8");
   }
   throw new Error("No input provided. Pass a file or pipe data via stdin.");
 }

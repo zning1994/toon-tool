@@ -1,5 +1,5 @@
+import { readFileSync } from "fs";
 import { toon2json } from "./toon2json.js";
-import { json2toon } from "./json2toon.js";
 
 type FileType = "toon" | "json" | "auto";
 
@@ -11,7 +11,6 @@ function detectType(file: string, hint: FileType): FileType {
 }
 
 function loadFile(file: string): string {
-  const { readFileSync } = require("fs") as typeof import("fs");
   return readFileSync(file, "utf8");
 }
 

@@ -66,7 +66,6 @@ export function lex(toon: string): LexedLine[] {
     const indent = match[1].length;
     const content = match[2];
     const rootTabMatch = content.match(/^(\S+)\s*:\s*(\S[\s\S]*)$/);
-    const fieldMatch = content.match(/^(\S+)\s*:\s*(\S[\s\S]*)$/);
     const kvMatch = content.match(/^(\S+)\s*:\s*(.*)$/);
     const sizeMatch = content.match(/^(\S+)\[(\d+)\]\s*:\s*(.*)$/);
 
@@ -91,10 +90,6 @@ export function lex(toon: string): LexedLine[] {
         kind = "rootKV";
         key = rootTabMatch[1];
       }
-    } else if (fieldMatch && content.includes(",")) {
-      kind = "tabular";
-      key = fieldMatch[1];
-      fields = splitCSV(fieldMatch[2]);
     } else if (kvMatch) {
       kind = "kv";
       key = kvMatch[1];
@@ -111,8 +106,8 @@ function parsePrimitive(raw: string): JSONValue {
   if (s === "false") return false;
   if (s === "") return "";
   if (!isNaN(Number(s)) && s !== "") return Number(s);
-  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith('"') && s.endsWith('"'))) {
-    return s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+  if (s.length >= 2 && ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'")))) {
+    return s.slice(1, -1).replace(/\\"/g, '"').replace(/\\'/g, "'").replace(/\\\\/g, "\\");
   }
   return s;
 }

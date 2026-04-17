@@ -25,13 +25,17 @@ export function validateToon(src) {
                 }
             }
         }
-        // Rule 3: array size mismatch
-        const sizeMatch = raw.match(/^(\S+)\[(\d+)\]\s*:/);
+        // Rule 3: array size mismatch (only when values are inline on same line;
+        // nested form `key[n]:` with values on following lines is allowed)
+        const sizeMatch = raw.match(/^\s*(\S+)\[(\d+)\]\s*:\s*(.*)$/);
         if (sizeMatch) {
             const expected = parseInt(sizeMatch[2], 10);
-            const vals = (sizeMatch[3] || "").split(",").map((s) => s.trim()).filter(Boolean);
-            if (expected !== vals.length) {
-                errors.push(`Line ${i + 1}: Array size [${expected}] doesn't match row value count ${vals.length}`);
+            const inline = sizeMatch[3].trim();
+            if (inline !== "") {
+                const vals = inline.split(",").map((s) => s.trim()).filter(Boolean);
+                if (expected !== vals.length) {
+                    errors.push(`Line ${i + 1}: Array size [${expected}] doesn't match row value count ${vals.length}`);
+                }
             }
         }
         // Rule 4: mixed bracket syntax (can't mix : and [n]: in same object)
@@ -49,8 +53,6 @@ export function validateToon(src) {
         }
     }
     // Rule 7: check balanced brackets across the whole file
-    const openBrackets = (src.match(/[\[\]\{\}]/g) || []).length;
-    // Simple check: count of [ must equal count of ] and { must equal }
     const openSquare = (src.match(/\[/g) || []).length;
     const closeSquare = (src.match(/\]/g) || []).length;
     const openCurly = (src.match(/\{/g) || []).length;

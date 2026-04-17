@@ -6,13 +6,16 @@
   "bin": {
     "toon": "./dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zning1994-agent/toon-tool.git"
+  },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "commander": "^12.1.0",
-    "chalk": "^5.3.0"
+    "commander": "^12.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
